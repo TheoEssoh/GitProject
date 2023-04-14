@@ -200,3 +200,86 @@ Une pull request, ou demande de pull, en français, est une fonctionnalité de G
 d’un repository l’autorisation de fusionner nos changements sur la branche principale ou toute autre branche sur laquelle 
 on souhaite apporter nos modifications.
 
+En résumé
+
+    Sur GitHub, nous pouvons récupérer l'URL d'un dépôt distant.
+
+    git clone permet de copier en local un dépôt distant.
+
+    git remote add permet de lier un dépôt à un "nom court", pour une plus grande facilité d’utilisation.
+
+    git pull permet de dupliquer un dépôt GitHub en local.
+
+    Une Pull Request permet de demander à fusionner votre code sur la branche principale.
+# Quiz
+
+<img src="Les_Zones_De_Git.png"/>
+
+# Pratiquez et corrigez vos erreurs sur un dépôt local
+
+Grâce à la ligne de commande 
+
+      ls -la 
+
+, vous pouvez faire apparaître les dossiers cachés.
+
+## J’ai créé une branche que je n’aurais pas dû créer
+
+Avant de créer une branche, vous devez créer votre branche principale.
+
+Pour cela, il vous suffit d’ajouter un fichier et de le commiter.
+
+Créez un fichier "PremierFichier.txt" dans votre répertoire Test :
+
+    touch PremierFichier.txt
+
+Ajoutez-le avec la commande :
+
+    git add PremierFichier.txt
+    git commit
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
+vous pouvez modifier la configuration de Git pour utiliser Sublime Text.
+
+Pour ce faire, suivez ces étapes :
+
+    Ouvrez un terminal et entrez la commande suivante pour ouvrir le fichier de configuration global de Git :
+
+    git config --global --edit
+
+Dans le fichier de configuration, recherchez la section [core] et ajoutez la ligne suivante :
+
+    editor = subl
+
+    Cela définit Sublime Text comme l'éditeur par défaut de Git. 
+
+Si vous voulez définir vim :
+    
+    editor = vim
+
+ou
+
+Si vous voulez définir nano, vim ou sublime text :
+
+    git config --global core.editor "nano"
+    git config --global core.editor "vim"
+    git config --global core.editor "subl"
+
+Enregistrez et fermez le fichier de configuration.
+
+Désormais, lorsque vous utilisez des commandes Git qui nécessitent l'ouverture d'un éditeur (comme git commit), Sublime Text sera utilisé comme éditeur par défaut.
+
+Pour l'outil de merge
+
+     git config --global merge.tool subl 
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Pour vérifier que le message a bien été enregistré, vous pouvez utiliser la commande 
+
+    git log 
+
+pour afficher l'historique des commits, qui devrait inclure le dernier commit que vous venez de créer.
