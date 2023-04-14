@@ -1,3 +1,4 @@
+<img src="Git.png"/>
 # Qu'est-ce qu’un gestionnaire de versions ?
   
     Un gestionnaire de versions est un programme qui permet aux développeurs de conserver un historique des modifications 
