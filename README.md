@@ -175,3 +175,28 @@ En résumé
 
 <img src="2Branches.png"/>
 
+En résumé
+
+    Une branche est une “copie” d’un projet sur laquelle on opère des modifications de code.
+
+    La branche main (ou anciennement master) est la branche principale d’un projet.
+
+    git checkout permet de basculer d’une branche à une autre.
+
+    git merge permet de fusionner deux branches.
+
+# Travaillez avec un dépôt distant
+
+    git remote add OC https://github.com/OpenClassrooms-Student-Center/7162856-G-rez-Git-et-GitHub.git
+OC représente le nom court que vous utiliserez ensuite pour appeler votre dépôt. Appelez-le comme bon vous semble,
+mais un nom court et simple est toujours plus facile.
+Cette ligne ne permet pas de copier le dépôt, mais permet de dire au dépôt que l’on pointe vers le dépôt distant.
+    
+    "git pull origin main" devient "git pull OC main"
+
+## Réalisez une pull request
+
+Une pull request, ou demande de pull, en français, est une fonctionnalité de GitHub qui permet de demander aux propriétaires 
+d’un repository l’autorisation de fusionner nos changements sur la branche principale ou toute autre branche sur laquelle 
+on souhaite apporter nos modifications.
+
