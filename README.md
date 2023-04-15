@@ -283,3 +283,70 @@ Pour vérifier que le message a bien été enregistré, vous pouvez utiliser la 
     git log 
 
 pour afficher l'historique des commits, qui devrait inclure le dernier commit que vous venez de créer.
+<<<<<<< Updated upstream
+=======
+
+Pour supprimer une branche:
+
+    git branch -d brancheAsupprimer
+
+Renommer la branche master:
+
+    git branch -M main
+
+Si vous avez déjà fait des modifications dans la branche que vous souhaitez supprimer, vous pouvez la supprimer avec la commande :
+
+    git branch -D brancheAsupprimer
+
+    La suppression de cette branche entraînera la suppression de tous les fichiers
+    et modifications que vous n'aurez pas commités sur cette branche.
+
+Si vous avez modifié votre branche principale (main ou master) avant de créer votre branche et que vous n'avez pas fait 
+le commit, ce n’est pas bien grave. Il vous suffit de faire une remise - ou un stash en anglais.
+
+    La remise, ou stash, permet de mettre vos modifications de côté, les ranger, 
+    le temps de créer votre nouvelle branche et d’appliquer cette remise sur la nouvelle branche.
+
+    git stash
+Après avoir créé et basculé sur la nouvelle branche créée, pour récupérer les modifications mises de coté avec git stash, on doit faire:
+
+    Et finalement, vous pouvez appliquer le stash pour :
+
+    - récupérer les modifications que vous avez rangées dans le stash
+
+    - Appliquer ces modifications sur votre nouvelle branche:
+
+    "git stash apply"
+    Cette commande va appliquer le dernier stash qui a été fait.
+
+Si pour une raison ou une autre, vous avez créé plusieurs stash, et que le dernier n'est pas celui que vous souhaitez
+appliquer, pas de panique, il est possible d’en appliquer un autre..
+
+En premier lieu, regardez la liste de vos stash avec la commande suivante :
+
+    git stash list
+
+Cette commande va vous retourner un "tableau" des stash avec des identifiants du style :
+Il suffira alors d'appeler la commande    git stash  en indiquant l'identifiant.
+
+    git stash apply stash@{0}
+
+Maintenant, admettons que vous ayez réalisé vos modifications et qu'en plus vous ayez fait le commit. Le cas est plus 
+complexe, puisque vous avez enregistré vos modifications sur la branche principale, alors que vous ne deviez pas.
+
+Pour réparer cette erreur, vous devez analyser vos derniers commits avec la fonction "git log", 
+Vous allez alors récupérer l'identifiant du commit que l'on appelle couramment le hash.
+Par défaut, "git log" va vous lister par ordre chronologique inversé tous vos commits réalisés:
+
+    git log
+
+Maintenant que vous disposez de votre identifiant, gardez-le bien de côté. Vérifiez que vous êtes sur
+votre branche principale et réalisez la commande suivante :
+
+    git reset --hard HEAD^
+    
+    Cette ligne de commande va supprimer de la branche principale votre dernier commit.
+    Le HEAD^ indique que c'est bien le dernier commit que nous voulons supprimer. 
+    L’historique sera changé, les fichiers seront supprimés.
+
+    
