@@ -283,8 +283,6 @@ Pour vérifier que le message a bien été enregistré, vous pouvez utiliser la 
     git log 
 
 pour afficher l'historique des commits, qui devrait inclure le dernier commit que vous venez de créer.
-<<<<<<< Updated upstream
-=======
 
 Pour supprimer une branche:
 
@@ -348,5 +346,8 @@ votre branche principale et réalisez la commande suivante :
     Cette ligne de commande va supprimer de la branche principale votre dernier commit.
     Le HEAD^ indique que c'est bien le dernier commit que nous voulons supprimer. 
     L’historique sera changé, les fichiers seront supprimés.
+    Il n'est pas nécessaire d'écrire l'identifiant en entier. Seuls les 8 premiers caractères
+    sont nécessaires.
+
 
     
