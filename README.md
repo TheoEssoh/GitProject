@@ -329,12 +329,12 @@ Il suffira alors d'appeler la commande    git stash  en indiquant l'identifiant.
 
     git stash apply stash@{0}
 
-Maintenant, admettons que vous ayez réalisé vos modifications et qu'en plus vous ayez fait le commit. Le cas est plus 
+Maintenant, admettons que vous ayez réalisé vos modifications et qu'en plus, vous ayez fait le commit. Le cas est plus 
 complexe, puisque vous avez enregistré vos modifications sur la branche principale, alors que vous ne deviez pas.
 
 Pour réparer cette erreur, vous devez analyser vos derniers commits avec la fonction "git log", 
 Vous allez alors récupérer l'identifiant du commit que l'on appelle couramment le hash.
-Par défaut, "git log" va vous lister par ordre chronologique inversé tous vos commits réalisés:
+Par défaut, "git log" va vous lister par ordre chronologique inversé tous vos commits réalisés :
 
     git log
 
@@ -349,5 +349,320 @@ votre branche principale et réalisez la commande suivante :
     Il n'est pas nécessaire d'écrire l'identifiant en entier. Seuls les 8 premiers caractères
     sont nécessaires.
 
+Ensuite, vous passez sur la branche que vous voulez ajouter les modifications puis vous faites :
 
+    git reset --hard ca83a6df
+
+Lorsque l'on travaille sur un projet avec Git, il est très important de marquer correctement les modifications
+effectuées dans le message descriptif. Cependant, si vous faites une erreur dans l'un de vos messages de commit,
+il est possible de changer le message après coup :
+
+    git commit -m "ahaha"
+
+Pour modifier le message :
+
+    git commit --amend -m "ahaha + ahaha"
+
+    Attention ! Cette commande va fonctionner pour le dernier commit réalisé ! 
+
+L'exécution de cette commande, lorsqu'aucun élément n'est encore modifié, vous permet de modifier 
+le message du commit précédent sans modifier son instantané.
+
+
+Imaginez maintenant que vous ayez fait votre commit, mais que vous réalisiez que vous avez oublié un fichier.
+Dans un premier temps, ajoutez votre fichier : 
     
+    git add fichier.txt
+Puis réalisez le : 
+
+    git commit --amend --no-edit
+
+Votre fichier a été ajouté à votre commit et grâce à la commande "--no-edit" que vous avez ajoutée,
+vous n'avez pas modifié le message du commit.
+
+Il existe trois modes de git reset que vous pouvez utiliser pour supprimer un commit:
+
+- Soft reset: Cette option conserve les modifications apportées dans le commit que vous supprimez.
+Pour effectuer un soft reset, utilisez la commande :
+
+      git reset --soft <commit> en remplaçant <commit> par l'identifiant du commit que vous souhaitez supprimer.
+
+- Mixed reset: Cette option supprime le commit ainsi que les modifications qu'il contient, 
+mais conserve les modifications dans la zone de staging. Pour effectuer un mixed reset, utilisez la commande :
+     
+      git reset <commit> en remplaçant <commit> par l'identifiant du commit que vous souhaitez supprimer.
+
+- Hard reset: Cette option supprime complètement le commit et toutes les modifications qu'il contenait,
+y compris les modifications dans la zone de staging. Pour effectuer un hard reset, utilisez la commande :
+
+      git reset --hard <commit> en remplaçant <commit> par l'identifiant du commit que vous souhaitez supprimer.
+
+En résumé
+
+    git branch -d permet de supprimer une branche.
+
+    git status permet de voir l’état des fichiers.
+
+    git stash enregistre les modifications non indexées pour une utilisation ultérieure. 
+
+    git log affiche l'historique des commits réalisés sur la branche courante.
+
+    git reset --hard HEAD^ permet de réinitialiser l'index et le répertoire de travail à l'état du dernier commit.
+
+    git commit --amend permet de sélectionner le dernier commit pour y effectuer des modifications.
+
+# Corrigez vos erreurs en local et à distance
+
+La journée a été difficile et par mégarde vous avez pushé des fichiers erronés.
+
+Le problème, c'est que cette erreur concerne aussi les personnes avec qui vous travaillez sur le projet.
+Prévenir vos collaborateurs, bien sûr !! 
+
+Il est possible d'annuler son commit public avec la commande git revert. L'opération revert annule un commit 
+en créant un nouveau commit. C'est une méthode sûre pour annuler des changements, car elle ne risque pas de 
+réécrire l'historique du commit.
+
+    git revert HEAD^
+
+Par conséquent, il vaut mieux utiliser "git revert" pour annuler des changements apportés à une branche publique, 
+et "git reset" pour faire de même, mais sur une branche privée.
+
+**git revert** annule les changements apportés par un ou plusieurs commits en créant un nouveau commit qui contient 
+les modifications inverses. Cela signifie que les modifications précédentes sont conservées dans l'historique des 
+commits, mais que les modifications indésirables sont supprimées.
+
+**git reset HEAD** permet d'annuler des changements qui n'ont pas encore été commités. Il permet de retirer les fichiers
+de la zone de préparation (staging area) et de les ramener dans la zone de travail (working directory), tout en conservant
+les modifications précédentes dans l'historique des commits. Cela signifie que les modifications indésirables sont 
+supprimées, mais que les modifications précédentes sont conservées.
+
+
+Exemple de **git revert** :
+        
+    Utilisez la commande git log pour identifier le hash du commit que vous souhaitez
+    annuler. Par exemple, le hash est "123abc".
+    Utilisez la commande **git revert 123abc** pour créer un nouveau commit qui annule les 
+    changements apportés par le commit "123abc". Ce nouveau commit contiendra les modifications inverses.
+    Par exemple, si le commit "123abc" ajoutait une ligne à un fichier, le nouveau commit supprimera cette ligne.
+    Vous pouvez alors pousser le nouveau commit vers votre référentiel Git pour annuler les modifications.
+
+Exemple de **git reset HEAD** :
+    
+    Supposons que vous avez modifié deux fichiers dans votre zone de travail et que vous avez ajouté ces modifications 
+    à la zone de préparation en utilisant git add. Cependant, vous souhaitez annuler les modifications apportées 
+    à l'un des fichiers et les retirer de la zone de préparation.
+    Utilisez la commande **git reset HEAD nom_du_fichier** pour retirer le fichier de la zone de préparation et le ramener
+    dans la zone de travail. Les modifications précédentes sont conservées dans l'historique des commits.
+    Vous pouvez alors effectuer les modifications souhaitées dans le fichier et l'ajouter de nouveau à la zone de
+    préparation à l'aide de git add.
+
+Toutefois, attention, **git revert** peut écraser vos fichiers dans votre répertoire de travail, il vous sera donc
+demandé de commiter vos modifications ou de les remiser.
+
+Si votre accès à distance ne fonctionne pas, cela peut être dû à un problème d’authentification de votre réseau.
+Pour le résoudre, il vous faut créer une paire de **clés SSH**.
+
+Une clé Secure Shell, ou clé SSH, permet d’assurer une connexion sécurisée entre votre réseau et un dépôt distant sécurisé. 
+C'est très utile quand vous avez besoin de vous authentifier sur une machine tierce, car cela vous évite d’avoir 
+à vous identifier systématiquement
+
+Nous allons maintenant générer notre duo de clés SSH :
+
+Dans Git Bash, exécutez la commande :
+
+    ssh-keygen -t rsa -b 4096 -C "johndoe@example.com"
+
+Vous pouvez soit appuyer sur Entrée, soit indiquer un nom de fichier. Un mot de passe vous est ensuite demandé.
+
+Pour la trouver, il suffit d'aller à l'adresse : C:\Users\VotreNomD'Utilisateur\, et d'afficher les dossiers masqués.
+
+Dans ce dossier, vous avez donc deux fichiers, votre clé publique et votre clé privée.
+
+La clé id_rsa.txt est votre clé privée alors que la clé id_rsa.pub est votre clé publique. 
+Ici nous allons utiliser votre clé publique seulement. Vous pouvez copier votre clé publique
+en l'ouvrant dans un bloc-notes.
+
+Maintenant que vous disposez de votre clé SSH, voyons comment l'ajouter pour GitHub !
+
+<img src="ssh.png"/>
+
+Cliquez sur SSH and GPG keys :
+
+<img src="ssh2.png"/>
+
+Puis sur New SSH Key :
+
+
+<img src="ssh3.png"/>
+
+Choisissez un titre et collez votre clé SSH :
+
+<img src="ssh4.png"/>
+
+Vous devrez ensuite confirmer votre mot de passe. Votre clé SSH sera alors ajoutée à votre compte GitHub !
+
+En résumé
+
+    git revert HEAD^ permet d'annuler un commit en créant un nouveau commit.
+
+    La commande ssh-keygen permet de générer un duo de clés SSH.
+
+    Vous pouvez configurer une nouvelle clé SSH sur GitHub.
+
+
+Imaginez que votre client vous demande une nouvelle fonctionnalité ; vous travaillez dessus toute la journée 
+et le lendemain, finalement, il change d'avis. Catastrophe !
+
+Vous avez perdu une journée à développer une fonctionnalité pour rien, mais en plus il faut que vous trouviez
+le moyen de revenir en arrière ! Heureusement, notre ami Git arrive à notre rescousse avec la commande **git reset**
+
+<img src="git_reset.png"/>
+
+
+# Les trois types de réinitialisation de Git
+--------------------------------------------
+
+La commande **git reset** est un outil complexe et polyvalent pour annuler les changements.
+Elle peut être appelée de trois façons différentes, qui correspondent aux arguments de ligne de commande : 
+
+    --soft, --mixed et --hard.
+
+<img src="git_reset3.png"/>
+
+Nous allons commencer par   reset --hard  .
+
+Si vous voulez exécuter cette commande, vérifiez 5 fois avant de la lancer et soyez sûr de vous à 200 %.
+
+Exécutez la commande :
+
+    git reset notreCommitCible --hard
+
+git reset notreCommitCible --hard et git reset --hard notreCommitCible sont équivalents.
+
+Cette commande permet de revenir à n'importe quel commit, mais en oubliant absolument tout ce qu'il s'est passé après !
+Quand je dis tout, c'est TOUT ! Que vous ayez fait des modifications après ou d'autres commits, tout sera effacé !
+C'est pourquoi il est extrêmement important de revérifier plusieurs fois avant de la lancer, vous pourriez perdre 
+toutes vos modifications si elle est mal faite.
+
+Cette utilisation de **git reset** constitue une manière simple d'annuler des changements qui n'ont pas encore été 
+partagés. Cette commande est incontournable lorsque vous commencez à travailler sur une fonctionnalité, que vous vous 
+êtes trompé et que vous voulez recommencer de zéro. Le **git reset --mixed** va permettre de revenir juste après votre 
+dernier commit ou le commit spécifié, sans supprimer vos modifications en cours. Il permet aussi, dans le cas de fichiers 
+indexés mais pas encore commités, de désindexer les fichiers.
+
+
+    git reset HEAD~
+Si rien n'est spécifié après **git reset**, par défaut, il exécutera un :
+
+    git reset --mixed HEAD~ 
+
+Le **HEAD** est un pointeur, une référence sur votre position actuelle dans votre répertoire de travail Git. 
+
+
+Nous avons enfin, **git reset --soft**. Cette commande permet de se placer sur un commit spécifique afin de voir 
+le code à un instant donné, ou de créer une branche partant d'un ancien commit. Elle ne supprime aucun fichier,
+aucun commit, et ne crée pas de HEAD détaché.
+
+# Oups, j'ai des conflits !
+
+<img src="reset.jpg"/>
+
+Essayons cette super commande en faisant un premier commit que nous allons finalement ne plus vouloir. 
+Une fois votre commit fait, écrivez la commande suivante :
+
+    git revert HEAD
+
+Une fois votre commit "annulé", vous pouvez enlever votre fichier et réaliser de nouveau votre commit.
+En résumé
+
+    git reset est une commande puissante. Elle peut être appliquée de 3 façons différentes (--soft; --mixed; --hard).
+
+    La commande git merge produit un conflit si une même ligne a été modifiée plusieurs fois. Dans ce cas, il faut indiquer à Git quelle ligne conserver.
+
+    git reset permet de revenir à l'état précédent sans créer un nouveau commit.
+
+    git revert permet de revenir à l'état précédent en créant un nouveau commit.
+
+L'objectif d'un gestionnaire de versions est d'enregistrer les changements apportés à votre code. Il vous permet de consulter l'historique de votre projet pour :
+
+    savoir qui a contribué à quoi ;
+
+    déterminer où des bugs ont été introduits ;
+
+    annuler les changements problématiques.
+
+Peut-être, mais disposer de cet historique est inutile si vous ne savez pas comment l'utiliser ! C'est là que la commande "git log" entre en scène !
+
+    git log
+
+Par défaut, "git log" énumère en ordre chronologique inversé les commits réalisés. Cela signifie que les commits 
+les plus récents apparaissent en premier. Cette commande affiche chaque commit avec son identifiant SHA, l'auteur 
+du commit, la date et le message du commit. 
+
+    Le SHA ou Secure Hash Algorithm est un identifiant. C'est ce grand code incompréhensible
+    qui nous permettra de revenir en arrière si besoin, à un commit exact.
+
+Git dispose d'un outil encore plus puissant, poussant le journal de logs à l’extrême.
+
+    git reflog
+
+**git reflog** va loguer les commits ainsi que toutes les autres actions que vous avez pu faire en local : 
+vos modifications de messages, vos merges, vos resets, enfin tout, quoi. Comme "git log", "git reflog"
+affiche un identifiant SHA-1 pour chaque action. Il est donc très facile de revenir à une action donnée
+grâce au SHA. Cette commande, c'est votre joker, elle assure votre survie en cas d'erreur. Pour revenir
+à une action donnée, on prend les 8 premiers caractères de son SHA et on fait :
+
+    git checkout e789e7c
+
+
+Si vous découvrez un bug dans votre projet, vous allez avoir besoin d'identifier son origine et de savoir qui 
+a modifié chaque ligne du code. C'est à ce moment que  git blame  entre en scène.
+
+La commande **git blame** permet d’examiner le contenu d’un fichier ligne par ligne et de déterminer la date
+à laquelle chaque ligne a été modifiée, et le nom de l’auteur des modifications.
+
+    git blame monFichier.php
+
+git blame  va afficher pour chaque ligne modifiée :
+
+    son ID ;
+
+    l'auteur ;
+
+    l'horodatage ;
+
+    le numéro de la ligne ;
+
+    le contenu de la ligne.
+
+Lorsque vous travaillez avec une équipe de développeurs sur un projet de moyenne à grande taille, 
+la gestion des modifications entre plusieurs branches de Git peut devenir une tâche complexe. Parfois, 
+vous ne voulez pas fusionner une branche entière dans une autre et vous n'avez besoin que de choisir un 
+ou deux commits spécifiques. Ce processus s'appelle **cherry-pick** !
+
+**git cherry-pick**  n'est pas une commande très appréciée dans la communauté des développeurs, 
+car elle duplique des commits existants. Je vous conseille plutôt de réaliser un merge.
+
+Admettons que vous travailliez sur une branche "Mes évolutions", et que vous ayez déjà réalisé plusieurs commits.
+Votre collègue a besoin de l'une de ces évolutions pour la livrer au client, mais pas des autres. C'est dans 
+ce cas bien précis que nous allons faire appel à    git cherry-pick  ! Cette commande va permettre de sélectionner
+un ou plusieurs commits grâce à leur SHA (décidément ils sont partout) et de les migrer sur la branche principale,
+sans pour autant fusionner toute la branche "Mes évolutions".
+
+    git cherry-pick d356940 de966d4
+
+Ici, nous prenons les deux commits ayant pour SHA d356940 et de966d4, et nous les ajoutons 
+à la branche principale sans pour autant les enlever de votre branche actuelle. Nous les dupliquons !
+
+En résumé
+
+    git log affiche l'historique des commits réalisés sur la branche courante.
+
+    git reflog est identique à git log. Cette commande affiche également toutes les actions réalisées en local.
+
+    git checkout un_identifiant_SHA-1 permet de revenir à une action donnée.
+
+    git blame permet de savoir qui a réalisé telle modification dans un fichier, à quelle date, ligne par ligne.
+
+    git cherry-pick un_identifiant_SHA-1 un_autre_identifiant_SHA-1 permet de sélectionner un commit et de l'appliquer sur la branche actuelle.
+
