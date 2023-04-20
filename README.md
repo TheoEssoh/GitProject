@@ -666,3 +666,215 @@ En résumé
 
     git cherry-pick un_identifiant_SHA-1 un_autre_identifiant_SHA-1 permet de sélectionner un commit et de l'appliquer sur la branche actuelle.
 
+# Devenez un expert de Git et GitHub
+
+----------------------------------------
+
+<img src="clone_push.png"/>
+
+
+<img src="fork_pull_request.png"/>
+
+<img src="fork_clone.png"/>
+
+    Forker le projet – ce qui aura pour conséquence de dupliquer le projet en créant un nouveau repo dans votre compte GitHub.
+
+    Cloner le nouveau repository créé dans votre compte GitHub – ce qui va créer une copie locale du fork sur votre ordinateur.
+
+<img src="clone.png"/>
+
+Les issues permettent d’identifier une tâche à réaliser sur le projet. Elles peuvent représenter de nouvelles
+fonctionnalités, des corrections, des problèmes à résoudre, etc. Elles sont généralement hiérarchisées, par
+exemple par type, par importance, par thématique, etc.
+
+En résumé
+
+    Avant de contribuer à un projet open source, prenez connaissance de ses directives de collaboration.
+
+    Pour contribuer à un projet open source, vous devez le forker puis cloner le nouveau repository sur votre poste de travail.
+
+    Identifiez votre périmètre d’action en consultant les issues du projet.
+
+    Proposez des modifications au projet en réalisant des pull requests.
+
+
+<img src="conflit.png"/>
+
+Récapitulons ensemble :
+
+Premièrement, pour conserver la version distante, j’ai utilisé la commande : 
+    
+    git checkout --theirs README.md.
+
+Deuxièmement, pour conserver la version locale, j’ai utilisé la commande : 
+
+    git checkout --ours README.md.
+
+Et enfin troisièmement, pour corriger le conflit manuellement, j’ai ouvert le fichier et modifié son contenu.
+Cette modification implique d’enlever les lignes ajoutées automatiquement par Git, et de conserver le texte de mon choix.
+
+Pour chacune des situations, j’ai ensuite eu besoin d'exécuter les commandes git add, git commit et git push.
+
+En résumé
+
+    Git crée un conflit lorsqu’il ne sait pas quelle version d’un fichier il doit conserver. Cela arrive quand 
+    un fichier a été modifié au même endroit par 2 sources distinctes !
+
+    git status permet de comprendre la nature du conflit : c’est votre point de départ pour le résoudre.
+
+    À vous de choisir la solution qui vous convient le mieux pour résoudre votre conflit :
+
+        conserver la version distante ;
+
+        conserver la version locale ;
+
+        faire une version adaptée à la circonstance
+
+# Corrigez l’historique du projet au fil de vos développements
+
+La mémoire du repository Git est nommée historique. Ce dernier contient la liste des commits réalisés.
+
+Chaque commit regroupe un ensemble d'informations (comme la date, l’auteur, le message, etc.). 
+Il conserve également l’ID du commit précédent. Grâce à cela, Git peut retracer la chaîne des commits 
+et fournir l’historique.
+Vous pouvez visualiser l’historique avec la commande **git log**.
+
+## Faites une correction simple sur l’historique du projet
+Commençons avec un cas simple : alors que vous venez de résoudre une issue et que vous avez fièrement 
+commité le résultat de votre travail, vous vous rendez compte que vous avez oublié un fichier.
+
+Comment feriez-vous pour corriger cela ?
+
+Facile, git add du fichier manquant puis git commit !
+
+Certes, votre solution vous permettra d’obtenir le résultat souhaité, mais elle aura une conséquence fâcheuse : 
+votre historique contiendra 1 commit supplémentaire qui, fondamentalement, n’apporte rien. En d’autres termes : 
+cette solution va polluer votre historique.
+
+Et alors, quel est le problème ?
+
+Imaginez cette situation à l’échelle de grands projets avec de nombreux collaborateurs :
+l’historique deviendrait de plus en plus illisible, et nous perdrions l’avantage d’une traçabilité 
+claire des opérations sur le projet.
+
+Git nous offre une solution simple avec l’option --amend de la commande git commit pour éviter cette situation. Voilà comment vous en servir :
+
+    modification de 2 fichiers : README.md et CONTRIBUTING.md ;
+
+    git add README.md ;
+
+    git commit -m “Mise à jour de README.md et CONTRIBUTING.md”.
+
+Oups ! On réalise notre erreur, nous avons oublié le fichier CONTRIBUTING.md :
+
+    git add CONTRIBUTING.md ;
+
+    git commit --amend. 
+La commande git commit --amend implique la mise à jour du message du commit. Si vous ne souhaitez pas le modifier,
+ajoutez l’option --no-edit.
+
+## Modifiez précisément l’historique du projet
+
+En bon contributeur, vous ne travaillez pas sur la branche main, vous avez créé une branche nommée feature
+(ou fonctionnalité, en français) pour modifier les fichiers. Vous avez prévu de merger feature sur main 
+une fois votre contribution réalisée.
+
+Mais voilà, un problème majeur a été détecté par votre équipe sur la branche main, et il est résolu dans la foulée par 
+un collaborateur. Vous pensiez que votre branche avait comme point de départ le dernier commit de la branche main 
+mais ce n’est plus le cas ! Qui plus est, il vous faut intégrer le correctif appliqué à la branche main à votre branche.
+
+Comment feriez-vous ?
+
+Hum… je me place sur ma branche, puis je fais un git merge main.
+
+Intéressant, vous allez en effet intégrer le correctif à votre branche à travers un commit de merge. 
+C’est pas mal, mais ça a l’inconvénient, encore une fois, de polluer la lisibilité de l’historique.
+
+<img src="merge.png"/>
+
+On ne peut rien vous cacher ! L’heureuse élue est : **git rebase**. Cette commande permet de réécrire l’historique 
+de la branche que l’on rebase. Cela signifie que cette branche est déplacée à la pointe de la branche main, 
+comme le montre l’image ci-dessous :
+
+<img src="rebase.png"/>
+
+Retenons qu’une fois positionné sur la branche feature, il ne vous reste plus qu’à exécuter 
+
+    git rebase main.
+
+Veillez à respecter cette règle d’or lorsque vous utilisez la commande rebase :
+Ne réalisez jamais un rebase d’une branche publique (c'est-à-dire, une branche utilisée par plusieurs personnes).
+
+
+## Réécrire l’historique
+https://git-scm.com/book/fr/v2/Utilitaires-Git-R%C3%A9%C3%A9crire-l%E2%80%99historique
+
+
+## Localisez et corrigez un bug sans impacter la tâche courante
+Le dernier scénario que nous traiterons dans ce chapitre est assez fréquent pour les développeurs. Vous êtes en plein
+développement d’une nouvelle fonctionnalité quand tout à coup, on vous informe d’un bug à résoudre en haute priorité.
+Ce bug doit être résolu sur la branche que vous utilisez.
+
+
+Laissez-moi vous apprendre une façon propre de traiter cette situation.
+
+Voici la méthode :
+
+    Mettre de côté le développement en cours.
+
+    Identifier le commit qui est à l’origine du bug.
+
+    Annuler ce commit.
+
+    Reprendre le développement qui a été mis de côté.
+
+Récapitulons les commandes utilisées :
+
+    git stash permet de mettre de côté le développement en cours ;
+
+    git stash pop permet de récupérer ce qui a été stashé ;
+
+    git bisect (et ses options start, good, bad, reset) sert à identifier
+    un commit problématique en parcourant l’historique ;
+
+    git revert permet de créer un nouveau commit qui contient l’inverse du commit
+    concerné, ce qui revient à annuler l’effet de ce dernier.
+
+# Démarches pour Localisez et corrigez un bug sans impacter la tâche courante
+
+    git stash
+    git status
+    git bisect start
+    git bisect bad HEAD (pour indiquer que le commit actuel contient le problème)
+    git log (pour récuperer l'id d'un commit dont on est sur que c'est bon)
+    git bisect good id
+    git bisect good (après verification et que l'erreur ne vient pas de là)
+    git bisect good (après verification et que l'erreur ne vient pas de là)
+    git bisect bad (après verification et que l'erreur vient de là)
+    git bisect good (après verification et que l'erreur ne vient pas de là)
+    git bisect bad (après verification et que l'erreur vient de là)
+
+A la fin on aura l'id du commit en erreur. On le copie puis:
+
+    git bisect reset (pour sortir de bisect)
+    git revert id
+    git stash pop (pour revenir à ce qu'on faisait)
+    
+<img src="Demarche.png"/>
+
+En résumé
+
+    git commit --amend permet de modifier le dernier commit.
+
+    git rebase permet de réécrire l’historique d’une branche.
+
+    git stash permet de mettre de côté le développement en cours.
+
+    git stash pop permet de récupérer le développement mis de côté.
+
+    git bisect permet d’identifier un commit problématique en parcourant l’historique. 
+
+    git revert permet d’annuler un commit.
+
+# Découvrez les workflows
+
